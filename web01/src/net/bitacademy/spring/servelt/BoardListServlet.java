@@ -8,10 +8,12 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+@WebServlet("/board/list.do")
 public class BoardListServlet extends HttpServlet {
   private static final long serialVersionUID = 1L;
   
@@ -32,24 +34,44 @@ public class BoardListServlet extends HttpServlet {
     Statement stmt = null;
     ResultSet rs = null;
     try {
+      Class.forName("com.mysql.jdbc.Driver");
        con = DriverManager.getConnection(
           "jdbc:mysql://localhost:3306/studydb","study","study" );
        stmt = con.createStatement();
        rs =  stmt.executeQuery("select bno, title, cre_dt, views from Board");
+       out.println("<h1>게시물 목록 </h1>");
+       out.println("<table>");
+       out.println("<tr>");
+       out.println("<th>번호</th>");
+       out.println("<th>제목</th>");
+       out.println("<th>등록일</th>");
+       out.println("<th>조회수</th>");
+       out.println("</tr>");
        while(rs.next()){
-        /* <tr>
          
-         <td></td>
-         <td></td> 
-         <td></td>
-         <td></td>
-         </tr>*/
+         out.println("<tr>");
+         
+         out.println("<td>" + rs.getInt("bno")+ "</td>");
+         out.println("<td>" + rs.getString("title") + "</td> ");
+         out.println("<td>" + rs.getString("cre_dt") + "</td>");
+         out.println("<td>" + rs.getInt("views") + "</td>");
+         out.println("</tr>");
        }
+       out.println("</table>");
+       out.println("</body>");
+       out.println("</html>");
     } catch (Exception e) {
+        out.println("예외 발생!");
+        out.println("<pre>");
+        e.printStackTrace(out);
+        out.println("</pre>");
+
+    }finally{
      try{rs.close(); }catch(Exception ex){}
      try{stmt.close(); }catch(Exception ex){}
      try{con.close(); }catch(Exception ex){}
     }
+    
   }
 
 }
