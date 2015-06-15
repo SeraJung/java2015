@@ -40,7 +40,7 @@ public class BoardListServlet extends HttpServlet {
         /* <tr>
          
          <td></td>
-         <td></td>
+         <td></td> 
          <td></td>
          <td></td>
          </tr>*/
