@@ -38,6 +38,7 @@ public class BoardListServlet extends HttpServlet {
        rs =  stmt.executeQuery("select bno, title, cre_dt, views from Board");
        while(rs.next()){
         /* <tr>
+         
          <td></td>
          <td></td>
          <td></td>
