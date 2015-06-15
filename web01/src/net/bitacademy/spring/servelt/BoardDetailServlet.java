@@ -13,8 +13,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/board/list.do")
-public class BoardListServlet extends HttpServlet {
+@WebServlet("/board/detail.do")
+public class BoardDetailServlet extends HttpServlet {
   private static final long serialVersionUID = 1L;
   
   @Override
@@ -38,27 +38,47 @@ public class BoardListServlet extends HttpServlet {
        con = DriverManager.getConnection(
           "jdbc:mysql://localhost:3306/studydb","study","study" );
        stmt = con.createStatement();
-       rs =  stmt.executeQuery("select bno, title, cre_dt, views from Board");
-       out.println("<h1>게시물 목록 </h1>");
+       rs =  stmt.executeQuery("select bno, title, content, cre_dt, views "
+           + "from Board "
+           + "where bno = " + req.getParameter("no"));
+       if(!rs.next()){
+         throw new Exception("게시물이 존재 하지 않습니다.");
+       }
+       out.println("<h1>게시물 상세정보 </h1>");
+       out.println("<form action = 'chang.do' method = 'post'>");
        out.println("<table border='1'>");
        out.println("<tr>");
-       out.println("<th>번호</th>");
-       out.println("<th>제목</th>");
-       out.println("<th>등록일</th>");
-       out.println("<th>조회수</th>");
+       out.println("<th>번호</th> "
+           + "<td><input name='no' type ='text' readonly value='"
+           +rs.getInt("bno")+ "'/> </td>");
        out.println("</tr>");
-       while(rs.next()){
-         
-         out.println("<tr>");
-         
-         out.println("<td>" + rs.getInt("bno")+ "</td>");
-         out.println("<td> <a href='detail.do?no=" + rs.getInt("bno") 
-             + "'>" + rs.getString("title") + "</a></td> ");
-         out.println("<td>" + rs.getString("cre_dt") + "</td>");
-         out.println("<td>" + rs.getInt("views") + "</td>");
-         out.println("</tr>");
-       }
+       out.println("<tr>");
+       out.println("<th>제목</th> "
+           + "<td><input name='title' type ='text' value='"
+           + rs.getString("title")+ "'/></td>");
+       out.println("</tr>");
+       out.println("<tr>");
+       out.println("<th>내용</th> <td>"
+           + "<textarea name='content' rows='5' cols='50'>"
+           + rs.getString("content")+ "</textarea></td>");
+       out.println("</tr>");
+       out.println("<tr>");
+       out.println("<th>등록일</th> "
+           + "<td> <input type = 'text' readonly value ='"
+           + rs.getString("cre_dt")+ "'</td>");
+       out.println("</tr>");
+       out.println("<tr>");
+       out.println("<th>조회수</th> "
+           + "<td> <input type = 'text' readonly value ='"
+           + rs.getString("views")+ "'</td>");
+       out.println("</tr>");
+      
        out.println("</table>");
+       out.println("<button type = 'submit'> 변경</button>");
+       out.println("<button type = 'button' "
+           + "onclick = 'location.href = \"remove.do?no="
+           +rs.getInt("bno")+ "\";'>삭제</button>");
+       out.println("</form>");
        out.println("</body>");
        out.println("</html>");
     } catch (Exception e) {
