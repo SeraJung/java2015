@@ -45,11 +45,11 @@ public class BoardDetailServlet extends HttpServlet {
          throw new Exception("게시물이 존재 하지 않습니다.");
        }
        out.println("<h1>게시물 상세정보 </h1>");
-       out.println("<form action = 'chang.do' method = 'post'>");
+       out.println("<form action = 'change.do' method = 'post'>");
        out.println("<table border='1'>");
        out.println("<tr>");
        out.println("<th>번호</th> "
-           + "<td><input name='no' type ='text' readonly value='"
+           + "<td><input name = 'no' type ='text' readonly value='"
            +rs.getInt("bno")+ "'/> </td>");
        out.println("</tr>");
        out.println("<tr>");

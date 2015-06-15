@@ -38,8 +38,11 @@ public class BoardListServlet extends HttpServlet {
        con = DriverManager.getConnection(
           "jdbc:mysql://localhost:3306/studydb","study","study" );
        stmt = con.createStatement();
-       rs =  stmt.executeQuery("select bno, title, cre_dt, views from Board");
+       rs =  stmt.executeQuery("select bno, title, cre_dt, views"
+           + " from board"
+           + " order by bno desc");
        out.println("<h1>게시물 목록 </h1>");
+       out.println("<a href = 'form.html'> 새글</a><br>");
        out.println("<table border='1'>");
        out.println("<tr>");
        out.println("<th>번호</th>");
