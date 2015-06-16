@@ -6,11 +6,15 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import net.bitacademy.spring.dao.BoardDao;
+import net.bitacademy.spring.vo.Board;
 
 
 @WebServlet("/board/add.do")
@@ -24,47 +28,20 @@ public class BoardAddServlet extends HttpServlet {
     // 파라미터 값을 유니코드로 바꿀때 기본: ISO-8859-1(영어) -->Unicode
     //UTF-8(한글 -->Unicode
     req.setCharacterEncoding("UTF-8");
-    String no = req.getParameter("no");
-    String title = req.getParameter("title");
-    String content = req.getParameter("content");
-    
-
-    
+    Board board = new Board();
+    board.setTitle(req.getParameter("title"));   
+    board.setContent(req.getParameter("content"));     
     resp.setContentType("text/html;charset=UTF-8");
-    PrintWriter out = resp.getWriter();
-    out.println("<!DOCTYPE html>");
-    out.println("<html>");
-    out.println("<head>");
-    out.println("<meta charset='UTF-8'>");
-    out.println("<title>Insert title here</title>");
-    out.println("</head>");
-    out.println("<body>");
-    
-    Connection con = null;
-    PreparedStatement pstmt = null;
     
     try {
-      Class.forName("com.mysql.jdbc.Driver");
-       con = DriverManager.getConnection(
-          "jdbc:mysql://localhost:3306/studydb","study","study" );
-       pstmt =  con.prepareStatement(
-       "insert into board (title ,content, cre_dt)values(?,?,now())");
-       pstmt.setString(1, title);
-       pstmt.setString(2, content);
-       pstmt.executeUpdate();
-       
+      BoardDao boardDao = new BoardDao();
+      boardDao.insert(board);
        resp.sendRedirect("list.do");
        return;
     } catch (Exception e) {
-        out.println("예외 발생!");
-        out.println("<pre>");
-        e.printStackTrace(out);
-        out.println("</pre>");
-
-    }finally{
-     
-     try{pstmt.close(); }catch(Exception ex){}
-     try{con.close(); }catch(Exception ex){}
+      req.setAttribute("error", e);
+      RequestDispatcher rd = req.getRequestDispatcher("/error.jsp");
+      rd.include(req, resp);
     }
     
   }
