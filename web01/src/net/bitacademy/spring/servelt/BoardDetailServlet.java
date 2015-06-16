@@ -1,17 +1,19 @@
 package net.bitacademy.spring.servelt;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import net.bitacademy.spring.vo.Board;
 
 @WebServlet("/board/detail.do")
 public class BoardDetailServlet extends HttpServlet {
@@ -21,14 +23,7 @@ public class BoardDetailServlet extends HttpServlet {
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
       throws ServletException, IOException {
     resp.setContentType("text/html;charset=UTF-8");
-    PrintWriter out = resp.getWriter();
-    out.println("<!DOCTYPE html>");
-    out.println("<html>");
-    out.println("<head>");
-    out.println("<meta charset='UTF-8'>");
-    out.println("<title>Insert title here</title>");
-    out.println("</head>");
-    out.println("<body>");
+    
     
     Connection con = null;
     Statement stmt = null;
@@ -44,48 +39,22 @@ public class BoardDetailServlet extends HttpServlet {
        if(!rs.next()){
          throw new Exception("게시물이 존재 하지 않습니다.");
        }
-       out.println("<h1>게시물 상세정보 </h1>");
-       out.println("<form action = 'change.do' method = 'post'>");
-       out.println("<table border='1'>");
-       out.println("<tr>");
-       out.println("<th>번호</th> "
-           + "<td><input name = 'no' type ='text' readonly value='"
-           +rs.getInt("bno")+ "'/> </td>");
-       out.println("</tr>");
-       out.println("<tr>");
-       out.println("<th>제목</th> "
-           + "<td><input name='title' type ='text' value='"
-           + rs.getString("title")+ "'/></td>");
-       out.println("</tr>");
-       out.println("<tr>");
-       out.println("<th>내용</th> <td>"
-           + "<textarea name='content' rows='5' cols='50'>"
-           + rs.getString("content")+ "</textarea></td>");
-       out.println("</tr>");
-       out.println("<tr>");
-       out.println("<th>등록일</th> "
-           + "<td> <input type = 'text' readonly value ='"
-           + rs.getString("cre_dt")+ "'</td>");
-       out.println("</tr>");
-       out.println("<tr>");
-       out.println("<th>조회수</th> "
-           + "<td> <input type = 'text' readonly value ='"
-           + rs.getString("views")+ "'</td>");
-       out.println("</tr>");
-      
-       out.println("</table>");
-       out.println("<button type = 'submit'> 변경</button>");
-       out.println("<button type = 'button' "
-           + "onclick = 'location.href = \"remove.do?no="
-           +rs.getInt("bno")+ "\";'>삭제</button>");
-       out.println("</form>");
-       out.println("</body>");
-       out.println("</html>");
+       Board board = new Board();
+       board.setNo(rs.getInt("bno"));
+       board.setTitle(rs.getString("title"));
+       board.setContent(rs.getString("content"));
+       board.setCreateDate(rs.getDate("cre_dt"));
+       board.setViews(rs.getInt("views"));
+       
+       req.setAttribute("board", board);
+       RequestDispatcher rd = req.getRequestDispatcher("/board/detail.jsp");
+       rd.include(req, resp);
+       
+       
     } catch (Exception e) {
-        out.println("예외 발생!");
-        out.println("<pre>");
-        e.printStackTrace(out);
-        out.println("</pre>");
+      req.setAttribute("error", e);
+      RequestDispatcher rd = req.getRequestDispatcher("/error.jsp");
+      rd.include(req, resp);
 
     }finally{
      try{rs.close(); }catch(Exception ex){}
