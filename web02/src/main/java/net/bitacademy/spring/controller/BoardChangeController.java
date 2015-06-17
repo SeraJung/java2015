@@ -1,4 +1,4 @@
-package net.bitacademy.spring.servelt;
+package net.bitacademy.spring.controller;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -15,8 +15,8 @@ import net.bitacademy.spring.dao.BoardDao;
 import net.bitacademy.spring.vo.Board;
 
 
-@WebServlet("/board/change.do")
-public class BoardChangeServlet extends HttpServlet {
+
+public class BoardChangeController extends HttpServlet {
   private static final long serialVersionUID = 1L;
   
   @Override

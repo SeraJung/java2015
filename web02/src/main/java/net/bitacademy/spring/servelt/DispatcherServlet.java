@@ -9,33 +9,31 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.bitacademy.spring.dao.BoardDao;
-import net.bitacademy.spring.vo.Board;
+import net.bitacademy.spring.controller.BoardListController;
 
-@WebServlet("/board/detail.do")
-public class BoardDetailServlet extends HttpServlet {
+@WebServlet("*.do")
+public class DispatcherServlet extends HttpServlet{
   private static final long serialVersionUID = 1L;
 
   @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+  protected void service(HttpServletRequest req, HttpServletResponse resp)
       throws ServletException, IOException {
     resp.setContentType("text/html;charset=UTF-8");
+    try{
+      String viewUrl = null;
+      if(req.getServletPath().equals("/board/list.do")){
+        BoardListController controller = new BoardListController();
+        controller.execute(req,resp);
+      }
 
-    try {
-      BoardDao boardDao = new BoardDao();
-      Board board = boardDao
-          .selectOne(Integer.parseInt(req.getParameter("no")));
-      req.setAttribute("board", board);
-      RequestDispatcher rd = req.getRequestDispatcher("/board/detail.jsp");
+      RequestDispatcher rd = req.getRequestDispatcher(viewUrl);
       rd.include(req, resp);
-
-    } catch (Exception e) {
+    }  catch (Exception e) {
       req.setAttribute("error", e);
       RequestDispatcher rd = req.getRequestDispatcher("/error.jsp");
       rd.include(req, resp);
 
-    } 
+    }
 
   }
-
 }

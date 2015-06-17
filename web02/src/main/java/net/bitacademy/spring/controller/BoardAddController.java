@@ -1,4 +1,4 @@
-package net.bitacademy.spring.servelt;
+package net.bitacademy.spring.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -17,8 +17,8 @@ import net.bitacademy.spring.dao.BoardDao;
 import net.bitacademy.spring.vo.Board;
 
 
-@WebServlet("/board/add.do")
-public class BoardAddServlet extends HttpServlet {
+
+public class BoardAddController extends HttpServlet {
   private static final long serialVersionUID = 1L;
   
   @Override
