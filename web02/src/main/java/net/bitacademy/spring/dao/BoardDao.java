@@ -9,18 +9,13 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+@Component //빈의 이름을 지정하지 않으면 클래스 이름으로 지정
 public class BoardDao {
-  static  SqlSessionFactory sqlSessionFactory;
-  static{
-    try{
-      InputStream inputStream = Resources.getResourceAsStream(
-          "net/bitacademy/spring/dao/mybatis-config.xml");
-      sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
-    }catch( Exception e){
-      e.printStackTrace();
-    }
-  }
+  @Autowired
+  SqlSessionFactory sqlSessionFactory;
+  
   public List<Board> selectList() throws Exception{
     SqlSession sqlSession = sqlSessionFactory.openSession();
     
