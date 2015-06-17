@@ -1,17 +1,15 @@
 package net.bitacademy.spring.dao;
 
-import java.io.InputStream;
 import java.util.List;
 
 import net.bitacademy.spring.vo.Board;
 
-import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-@Component //빈의 이름을 지정하지 않으면 클래스 이름으로 지정
+import org.springframework.stereotype.Repository;
+
+@Repository //빈의 이름을 지정하지 않으면 클래스 이름으로 지정
 public class BoardDao {
   @Autowired
   SqlSessionFactory sqlSessionFactory;

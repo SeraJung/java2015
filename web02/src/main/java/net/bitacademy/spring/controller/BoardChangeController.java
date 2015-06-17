@@ -1,28 +1,24 @@
 package net.bitacademy.spring.controller;
 
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import net.bitacademy.spring.dao.BoardDao;
 import net.bitacademy.spring.vo.Board;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-@Component("/board/change.do")
-public class BoardChangeController  implements PageController{
+
+@Controller
+@RequestMapping("/board/change.do")
+public class BoardChangeController {
   @Autowired
   BoardDao boardDao;
-  public String execute(HttpServletRequest req, HttpServletResponse resp)
+  
+  @RequestMapping
+  public String change(HttpServletRequest req, HttpServletResponse resp)
      throws Exception {
     // 파라미터 값을 유니코드로 바꿀때 기본: ISO-8859-1(영어) -->Unicode
     //UTF-8(한글 -->Unicode
