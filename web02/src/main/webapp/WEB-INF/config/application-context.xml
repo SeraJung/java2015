@@ -23,21 +23,11 @@
     <property name="username" value="study"/>
     <property name="password" value="study"/>
 </bean>
-<!-- 
-  <bean id='/board/list.do'
-    class = 'net.bitacademy.spring.controller.BoardListController'>
-  </bean>
-  <bean id='/board/detail.do'
-    class = 'net.bitacademy.spring.controller.BoardDetailController'>
-  </bean>
-  <bean id='/board/add.do'
-    class = 'net.bitacademy.spring.controller.BoardAddController'>
-  </bean>
-  <bean id='/board/change.do'
-    class = 'net.bitacademy.spring.controller.BoardChangeController'>
-  </bean>
-  <bean id='/board/remove.do'
-    class = 'net.bitacademy.spring.controller.BoardRemoveController'>
-  </bean>
- -->
+<!-- DAO 자동생성기 
+  Dao interface를 찾아서 구현체를 자동 생성한다.
+-->
+<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+  <property name="basePackage" value="net.bitacademy.spring.dao" />
+</bean>
+
 </beans>
