@@ -1,0 +1,24 @@
+apply plugin: 'java'
+apply plugin: 'eclipse-wtp'
+compileJava {
+  sourceCompatibility = 1.8
+  options.encoding = 'UTF-8'
+}
+
+
+
+repositories {
+  mavenCentral()
+}
+
+//www.mvnrepository.com 에서 의존라이브러리를 검색.
+dependencies{
+  
+ 
+  compile 'org.springframework:spring-context:4.1.6.RELEASE'
+
+  
+  
+  
+  
+}

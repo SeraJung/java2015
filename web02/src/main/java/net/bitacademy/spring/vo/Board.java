@@ -12,12 +12,15 @@ public class Board implements Serializable{
   protected String  content;
   protected Date    createDate;
   protected int     views;
+  protected String  filepath;
   
   
+ 
   @Override
   public String toString() {
     return "Board [no=" + no + ", title=" + title + ", content=" + content
-        + ", createDate=" + createDate + ", views=" + views + "]";
+        + ", createDate=" + createDate + ", views=" + views + ", filepath="
+        + filepath + "]";
   }
   public int getNo() {
     return no;
@@ -48,6 +51,12 @@ public class Board implements Serializable{
   }
   public void setViews(int views) {
     this.views = views;
+  }
+  public String getFilepath() {
+    return filepath;
+  }
+  public void setFilepath(String filepath) {
+    this.filepath = filepath;
   }
  
   

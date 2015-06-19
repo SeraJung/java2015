@@ -10,6 +10,7 @@
   <result column="content" property="content"/> 
   <result column="cre_dt" property="createDate"/>
   <result column="views" property="views"/>  
+  <result column="filepath" property="filepath"/>  
 </resultMap>
 
   <select id = 'selectList' resultMap="BoardMap">  
@@ -19,18 +20,21 @@
   </select>
   
   <select id = 'selectOne' parameterType="int" resultMap="BoardMap">  
-  select bno, title, content, cre_dt, views
+  select bno, title, content, cre_dt, views,filepath
   from board
   where bno = #{value}
   </select>
   
   <insert id = 'insert' parameterType="Board"
    useGeneratedKeys="true" keyColumn="bno" keyProperty="no">
-  insert into board (title ,content, cre_dt)
-  values(#{title},#{content},now())
+  insert into board (title ,content, cre_dt,filepath)
+  values(#{title},#{content},now(),#{filepath})
   </insert>
   <update id = 'update' parameterType="Board" >
   update board set 
+    <if test="filepath != null" >
+    filepath = #{filepath},
+    </if>
     title = #{title} ,content = #{content} 
   where bno = #{no}
   </update>

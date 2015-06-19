@@ -6,7 +6,7 @@
 </head>
 <body>
 	<h1>게시물 등록</h1>
-	<form action='add.do' method='post'>
+	<form action='add.do' method='post' enctype="multipart/form-data">
 		<table border='1'>			
 			<tr>
 				<th>제목</th>
@@ -19,6 +19,10 @@
 				  placeholder = '내용을 입력하세요'></textarea>
 				</td>
 			</tr>			
+			<tr>
+			 <th>파일</th>
+			 <td><input name = 'file' type="file"></td>
+			</tr>
 		</table>
 		<button type='submit'>등록</button>
 		<button type='button' onclick='location.href = "list.do"'>취소</button>

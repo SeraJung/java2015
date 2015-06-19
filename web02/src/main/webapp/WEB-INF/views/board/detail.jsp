@@ -10,7 +10,7 @@
 </head>
 <body>
 	<h1>게시물 상세정보</h1>
-	<form action='change.do' method='post'>
+	<form action='change.do' method='post' enctype="Multipart/form-data">
 		<table border='1'>
 			<tr>
 				<th>번호</th>
@@ -38,6 +38,12 @@
 				<td><input type='text' readonly="readonly"
 					value='${board.views}'></td>
 			</tr>
+			<tr>
+        <th>파일</th>
+        <td><input name='file' type="file"/>
+        <a href = '../files/${board.filepath}'>${board.filepath}</a></td>
+      </tr>
+      
 		</table>
 		<button type='submit'>변경</button>
 		<button type='button'

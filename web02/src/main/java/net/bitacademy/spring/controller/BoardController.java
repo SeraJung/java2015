@@ -1,5 +1,8 @@
 package net.bitacademy.spring.controller;
 
+import java.io.File;
+
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import net.bitacademy.spring.service.BoardService;
@@ -10,13 +13,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequestMapping("/board")
 public class BoardController {
-  @Autowired
-  BoardService boardService;
+  @Autowired ServletContext sc;
+  @Autowired BoardService boardService;
 
+  
   @RequestMapping("/list")
   public String list(Model model)
       throws Exception {    
@@ -26,20 +32,32 @@ public class BoardController {
 
   }
   @RequestMapping(value ="/add",method=RequestMethod.POST )
-  public String add(Board board, HttpServletRequest request) throws Exception {
+  public String add(Board board,
+      @RequestParam MultipartFile file, 
+      HttpServletRequest request) throws Exception {
     
-    // 파라미터 값을 유니코드로 바꿀때 기본: ISO-8859-1(영어) -->Unicode
-    //UTF-8(한글 -->Unicode   
-    
+    String filename = generaterfilename(file.getOriginalFilename());
+      
+    file.transferTo(new File(sc.getRealPath("/files") +"/" + filename));
+    board.setFilepath(filename);
     boardService.add(board, request.getRemoteAddr());
     return "redirect:list.do"; 
     
   }
   
-  @RequestMapping(value="/change" , method = RequestMethod.POST)
-  public String change(Board board, HttpServletRequest request)  throws Exception {
+  @RequestMapping(value="/change" ,      method = RequestMethod.POST)
+  public String change(Board board,
+      @RequestParam(required=false) MultipartFile file,
+      HttpServletRequest request)  throws Exception {
     // 파라미터 값을 유니코드로 바꿀때 기본: ISO-8859-1(영어) -->Unicode
     //UTF-8(한글 -->Unicode
+    
+    if(!file.isEmpty() ){
+      String filename = generaterfilename(file.getOriginalFilename());
+      
+      file.transferTo(new File(sc.getRealPath("/files") +"/" + filename));
+      board.setFilepath(filename);
+    }
     boardService.change(board, request.getRemoteAddr());
     return "redirect:list.do";
     
@@ -61,5 +79,10 @@ public class BoardController {
 
   }
 
+  private String generaterfilename(String originFilename){
+    int lastIndex = originFilename.lastIndexOf(".");
+    return System.currentTimeMillis() 
+        + originFilename.substring(lastIndex);
+  }
  
 }
