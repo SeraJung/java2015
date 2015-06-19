@@ -4,7 +4,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import net.bitacademy.spring.service.BoardService;
 import net.bitacademy.spring.vo.Board;
-import net.bitacademy.spring.vo.BoardLog;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

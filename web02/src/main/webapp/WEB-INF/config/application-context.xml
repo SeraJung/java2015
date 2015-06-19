@@ -2,38 +2,66 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:aop="http://www.springframework.org/schema/aop"
     xsi:schemaLocation="http://www.springframework.org/schema/beans         
         http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/context       
-        http://www.springframework.org/schema/context/spring-context.xsd">
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/tx       
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/aop    
+        http://www.springframework.org/schema/aop/spring-aop.xsd">
 
-<context:component-scan base-package="net.bitacademy.spring"/>
-<!-- mybatis 관련 객체 -->
-<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-  <property name="dataSource" ref="dataSource" />
-  <property name="typeAliasesPackage" value="net.bitacademy.spring.vo" />
-   <property name="mapperLocations" value="classpath*:net/bitacademy/spring/dao/*Dao.xml" />
-</bean>
-<bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-    <property name="dataSource" ref="dataSource"/>
-</bean>
-<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-    <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
-    <property name="url" value="jdbc:mysql://localhost:3306/studydb"/>
-    <property name="username" value="study"/>
-    <property name="password" value="study"/>
-</bean>
-<!-- DAO 자동생성기 
-  Dao interface를 찾아서 구현체를 자동 생성한다.
--->
-<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-  <property name="basePackage" value="net.bitacademy.spring.dao" />
-</bean>
-<!-- 기존의 view resolver 교체  -->
-<bean id="jspViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-    <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
-    <property name="prefix" value="/WEB-INF/views/"/>
-    <property name="suffix" value=".jsp"/>
-</bean>
+<context:component-scan base-package="net.bitacademy.spring" />
+	<tx:annotation-driven transaction-manager="txManager" />
+	<!-- mybatis 관련 객체 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="typeAliasesPackage" value="net.bitacademy.spring.vo" />
+		<property name="mapperLocations"
+			value="classpath*:net/bitacademy/spring/dao/*Dao.xml" />
+	</bean>
+	<bean id="txManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<tx:advice id="txAdvice" transaction-manager="txManager">
+		<tx:attributes>
+			<tx:method name="get*" propagation="NOT_SUPPORTED" />
+			<tx:method name="list*" read-only="true" />
+			<tx:method name="*" propagation="REQUIRED" />
+		</tx:attributes>
+	</tx:advice>
+	<aop:config>
+		<aop:pointcut id="serviceOperation"
+			expression="execution(* net.bitacademy.spring.service..*Service.*(..))" />
+
+		<aop:advisor pointcut-ref="serviceOperation" advice-ref="txAdvice" />
+
+	</aop:config>
+
+
+
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost:3306/studydb" />
+		<property name="username" value="study" />
+		<property name="password" value="study" />
+	</bean>
+	<!-- DAO 자동생성기 Dao interface를 찾아서 구현체를 자동 생성한다. -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="net.bitacademy.spring.dao" />
+	</bean>
+	<!-- 기존의 view resolver 교체 -->
+	<bean id="jspViewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.JstlView" />
+		<property name="prefix" value="/WEB-INF/views/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
 
 </beans>
